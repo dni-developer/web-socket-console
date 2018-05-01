@@ -12,13 +12,9 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "net.dni.websocketconsole.repository")
 public class ESConfig {
-    @Bean
-    public NodeBuilder nodeBuilder() {
-        return new NodeBuilder();
-    }
 
     @Bean
-    public ElasticsearchOperations elasticsearchTemplate() {
-        return new ElasticsearchTemplate(nodeBuilder().local(true).node().client());
+    public ESLocalClientFactory elasticsearchClient(){
+        return new ESLocalClientFactory();
     }
 }
