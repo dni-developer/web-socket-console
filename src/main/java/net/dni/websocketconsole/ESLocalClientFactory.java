@@ -16,10 +16,9 @@ public class ESLocalClientFactory implements FactoryBean<Client> {
     @Override
     public Client getObject() {
         Settings settings = Settings.builder()
-                .put("path.home", ".")
+                .put("path.home", "elasticsearch")
                 .put("transport.type", "local")
                 .put("http.enabled", "true")
-//                .put("path.data", "~/elasticsearchdata")
                 .build();
         Node node = NodeBuilder.nodeBuilder().local(true).settings(settings).node();
         node.start();
