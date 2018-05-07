@@ -37,16 +37,47 @@
             });
         }
 
+        $.fn.serializeFormJSON = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
         $(function () {
             connect();
-            $("form").submit(function (e) {
+            $("#form-add").submit(function (e) {
                 e.preventDefault();
-                var formData = new FormData(this);
                 $.ajax({
+                    dataType: "json",
+                    contentType: "application/json",
                     url: '/console',
                     type: 'POST',
-                    data: formData,
-                    contentType: false,
+                    data: JSON.stringify($("#form-add").serializeFormJSON()),
+                    cache: false,
+                    processData: false
+                }).always(function (data) {
+                    console.log(data.status + ": " + data.responseText);
+                });
+            });
+
+            $("#form-search").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    dataType: "json",
+                    contentType: "application/json",
+                    url: '/console',
+                    type: 'GET',
+                    data: $("#form-search").serialize(),
                     cache: false,
                     processData: false
                 }).always(function (data) {
@@ -63,12 +94,23 @@
 <div class="container">
     <div class="row">
         <div class="col-sm">
-            <h2>Input</h2>
-            <form action="/console" method="post" class="form-inline">
+            <h2>Add</h2>
+            <form id="form-add" action="/console" method="post" class="form-inline">
                 <div class="form-spin mx-sm-3 mb-2">
-                    <input type="text" name="command" id="command" accept="text/plain" class="form-control">
+                    <input type="text" name="content" accept="text/plain" class="form-control">
+                    <input type="hidden" name="submitter" value="You">
                 </div>
-                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                <button type="submit" class="btn btn-primary mb-2">Add</button>
+            </form>
+        </div>
+        <div class="col-sm">
+            <h2>Search</h2>
+            <form id="form-search" action="/console" method="get" class="form-inline">
+                <div class="form-spin mx-sm-3 mb-2">
+                    <input type="text" name="content" accept="text/plain" class="form-control">
+                    <input type="hidden" name="submitter" value="You">
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Search</button>
             </form>
         </div>
     </div>

@@ -4,17 +4,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 @Document(indexName = "spring-boot", type = "requests")
-public class SearchRequest {
+public class Search {
 
     @Id
     private String id;
     private String content;
     private String submitter;
 
-    public SearchRequest() {
+    public Search() {
     }
 
-    public SearchRequest(String id, String content, String submitter) {
+    public Search(String id, String content, String submitter) {
         this.id = id;
         this.content = content;
         this.submitter = submitter;
