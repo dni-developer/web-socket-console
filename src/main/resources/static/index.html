@@ -57,6 +57,7 @@
             connect();
             $("#form-add").submit(function (e) {
                 e.preventDefault();
+                /*add*/
                 $.ajax({
                     dataType: "json",
                     contentType: "application/json",
@@ -70,14 +71,15 @@
                 });
             });
 
-            $("#form-search").submit(function (e) {
+            $("#form-myDocument").submit(function (e) {
                 e.preventDefault();
+                /*search*/
                 $.ajax({
                     dataType: "json",
                     contentType: "application/json",
                     url: '/console',
                     type: 'GET',
-                    data: $("#form-search").serialize(),
+                    data: $("#form-myDocument").serialize(),
                     cache: false,
                     processData: false
                 }).always(function (data) {
@@ -105,7 +107,7 @@
         </div>
         <div class="col-sm">
             <h2>Search</h2>
-            <form id="form-search" action="/console" method="get" class="form-inline">
+            <form id="form-myDocument" action="/console" method="get" class="form-inline">
                 <div class="form-spin mx-sm-3 mb-2">
                     <input type="text" name="content" accept="text/plain" class="form-control">
                     <input type="hidden" name="submitter" value="You">

@@ -11,6 +11,7 @@ public class WebSocketConsoleApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		/*test context*/
 	}
 
 }

@@ -46,7 +46,7 @@
 		</dependency>
 
 		<!-- Runtime, for Embedded Elasticsearch,
-            comment this if connect to external elastic search server-->
+            comment this if connect to external elastic myDocument server-->
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>

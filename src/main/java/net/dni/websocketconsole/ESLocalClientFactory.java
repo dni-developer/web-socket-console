@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class ESLocalClientFactory implements FactoryBean<Client> {
 
-    private Set<Node> nodes = new HashSet<>();
+    private final Set<Node> nodes = new HashSet<>();
 
     @Override
     public Client getObject() {

@@ -1,7 +1,7 @@
 package net.dni.websocketconsole.service;
 
-import net.dni.websocketconsole.model.Search;
-import net.dni.websocketconsole.repository.SearchRepository;
+import net.dni.websocketconsole.model.MyDocument;
+import net.dni.websocketconsole.repository.MyDocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -9,36 +9,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConsoleService {
 
-    @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
+    private static final String RESPONSE = "OK";
+
+    private final SimpMessageSendingOperations messagingTemplate;
+    private final SearchService searchService;
+    private final MyDocumentRepository myDocumentRepository;
 
     @Autowired
-    private AnalyzerService analyzerService;
-
-    @Autowired
-    private SearchRepository searchRepository;
-
-    public String search(Search input) {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        broadcast(analyzerService.analyze(input.getContent()), "Analyzer");
-        return "OK";
+    public ConsoleService(SimpMessageSendingOperations messagingTemplate, SearchService searchService, MyDocumentRepository myDocumentRepository) {
+        this.messagingTemplate = messagingTemplate;
+        this.searchService = searchService;
+        this.myDocumentRepository = myDocumentRepository;
     }
 
-    public String add(Search input) {
-        searchRepository.save(new Search(null, input.getContent(), input.getSubmitter()));
+    public String search(String input) {
+        broadcast(searchService.fuzzySearch(input), "Fuzzy search");
+        return RESPONSE;
+    }
+
+    public String add(MyDocument input) {
+        myDocumentRepository.save(new MyDocument(null, input.getContent(), input.getSubmitter()));
         broadcast(input);
-        return "OK";
+        return RESPONSE;
     }
 
-    public void broadcast(Search search) {
-        broadcast(search.getContent(), search.getSubmitter());
+    private void broadcast(MyDocument myDocument) {
+        broadcast(myDocument.getContent(), myDocument.getSubmitter());
     }
 
-    public void broadcast(String message, String speaker) {
+    private void broadcast(String message, String speaker) {
         messagingTemplate.convertAndSend("/topic/console", speaker + ":	" + message);
     }
 }
