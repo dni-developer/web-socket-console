@@ -1,7 +1,7 @@
 package net.dni.websocketconsole.service;
 
-import net.dni.websocketconsole.model.MyDocument;
-import net.dni.websocketconsole.repository.MyDocumentRepository;
+import net.dni.websocketconsole.model.LogMessage;
+import net.dni.websocketconsole.repository.LogMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -13,13 +13,13 @@ public class ConsoleService {
 
     private final SimpMessageSendingOperations messagingTemplate;
     private final SearchService searchService;
-    private final MyDocumentRepository myDocumentRepository;
+    private final LogMessageRepository logMessageRepository;
 
     @Autowired
-    public ConsoleService(SimpMessageSendingOperations messagingTemplate, SearchService searchService, MyDocumentRepository myDocumentRepository) {
+    public ConsoleService(SimpMessageSendingOperations messagingTemplate, SearchService searchService, LogMessageRepository logMessageRepository) {
         this.messagingTemplate = messagingTemplate;
         this.searchService = searchService;
-        this.myDocumentRepository = myDocumentRepository;
+        this.logMessageRepository = logMessageRepository;
     }
 
     public String search(String input) {
@@ -27,14 +27,14 @@ public class ConsoleService {
         return RESPONSE;
     }
 
-    public String add(MyDocument input) {
-        myDocumentRepository.save(new MyDocument(null, input.getContent(), input.getSubmitter()));
+    public String add(LogMessage input) {
+        logMessageRepository.save(new LogMessage(null, input.getMessage(), input.getServer()));
         broadcast(input);
         return RESPONSE;
     }
 
-    private void broadcast(MyDocument myDocument) {
-        broadcast(myDocument.getContent(), myDocument.getSubmitter());
+    private void broadcast(LogMessage logMessage) {
+        broadcast(logMessage.getMessage(), logMessage.getServer());
     }
 
     private void broadcast(String message, String speaker) {
