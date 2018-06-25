@@ -28,13 +28,13 @@ public class ConsoleService {
     }
 
     public String add(LogMessage input) {
-        logMessageRepository.save(new LogMessage(null, input.getMessage(), input.getServer()));
+        logMessageRepository.save(new LogMessage(null, input.getMessage(), input.getHost()));
         broadcast(input);
         return RESPONSE;
     }
 
     private void broadcast(LogMessage logMessage) {
-        broadcast(logMessage.getMessage(), logMessage.getServer());
+        broadcast(logMessage.getMessage(), logMessage.getHost());
     }
 
     private void broadcast(String message, String speaker) {
